@@ -185,9 +185,9 @@
 
       <!-- Boton para ver el video -->
       <template v-slot:[`item.link`]="{ item }">
-        <v-btn fab color="red" dark @click.stop="playvideo(item)"
-          ><v-icon>mdi-youtube</v-icon></v-btn
-        >
+        <v-btn fab color="red" dark @click.stop="playvideo(item)">
+          <v-icon>mdi-youtube</v-icon>
+        </v-btn>
       </template>
 
       <!-- Botones de editar y borrar -->

@@ -12,6 +12,7 @@
         </v-col>
       </v-row>
     </v-parallax>
+
     <v-container>
       <v-row style="height: 200px" align="center" justify="center">
         <v-col>
@@ -33,7 +34,7 @@
           <v-col :key="i" cols="12" md="4" class="p-0">
             <v-hover v-slot="{ hover }">
               <v-card
-                :elevation="hover ? 20 : 0"
+                :elevation="hover ? 20 : 2"
                 :class="{ 'on-hover': hover }"
                 :color="item.color"
                 height="300"
@@ -44,7 +45,7 @@
                   <v-spacer></v-spacer>
                   <v-scale-transition>
                     <v-icon
-                      v-show="hover"
+                      v-if="hover"
                       style="font-size: 3rem"
                       color="white"
                       >{{ item.icon }}</v-icon
@@ -182,9 +183,155 @@
         </template>
       </v-row>
     </v-container>
-    <v-snackbar v-model="snackbar" timeout="3000" bottom color="success" rounded="pill">
-      <span :style="styleP"><v-icon>mdi-send-check</v-icon>
-       Mensaje Enviado</span>
+
+    <v-container>
+      <v-row
+        style="height: 150px"
+        class="fill-height"
+        align="center"
+        justify="center"
+      >
+        <v-col class="text-center">
+          <span :style="styleS" style="color: #3f51b5"
+            >Portafolio de Trabajos</span
+          >
+          <p :style="styleP" style="color: #283593">
+            Estos son Algunos de Nuestros Trabajos
+          </p>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-container fluid class="pa-0">
+      <v-row no-gutters class="fill-height" align="center">
+        <template v-for="(item, i) in videos">
+          <v-col :key="i" cols="12" md="4" class="p-0">
+            # Hover
+            <v-hover v-slot="{ hover }">
+              # Contenerdor
+              <v-card :class="{ 'on-hover': hover }" tile>
+                <v-menu absolute offset-y transition="scale-transition">
+                  # Activador
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-img
+                      v-bind="attrs"
+                      v-on="on"
+                      height="250"
+                      :src="item.photoUrl"
+                      :lazy-src="item.photoUrl"
+                      class="justify-center"
+                    >
+                      <template v-slot:placeholder>
+                        <v-row
+                          class="fill-height ma-0"
+                          align="center"
+                          justify="center"
+                        >
+                          <v-progress-circular
+                            indeterminate
+                            color="grey"
+                          ></v-progress-circular>
+                        </v-row>
+                      </template>
+
+                      <v-expand-transition>
+                        <div
+                          v-if="hover"
+                          :style="mask"
+                          class="d-flex white--text text-center text-md"
+                        >
+                          {{ item.name }}
+                        </div>
+                      </v-expand-transition>
+                    </v-img>
+                  </template>
+
+                  # Contenedor Info
+                  <v-card
+                    min-width="375"
+                    max-width="600"
+                    color="indigo lighten-3"
+                  >
+                    <v-card-title
+                      class="white--text indigo lighten-1 headline text-center"
+                      >{{ item.name }}</v-card-title
+                    >
+
+                    <v-card-text>
+                      <v-row justify="center" align="center">
+                        <v-col cols="6" sm="6">
+                          <v-list-item>
+                            <v-list-item-content>
+                              <v-list-item-title class="title white--text">
+                                Categoria:
+                              </v-list-item-title>
+                              <v-list-item-subtitle
+                                class="subtitle-1 white--text"
+                              >
+                                {{ item.category }}
+                              </v-list-item-subtitle>
+                            </v-list-item-content>
+                          </v-list-item>
+
+                          <v-list-item>
+                            <v-list-item-content>
+                              <v-list-item-title class="title white--text">
+                                Subcategoria:
+                              </v-list-item-title>
+                              <v-list-item-subtitle
+                                class="subtitle-1 white--text"
+                              >
+                                {{ item.subcategory }}
+                              </v-list-item-subtitle>
+                            </v-list-item-content>
+                          </v-list-item>
+
+                          <v-list-item>
+                            <v-list-item-content>
+                              <v-list-item-title class="title white--text">
+                                Plataforma:
+                              </v-list-item-title>
+                              <v-list-item-subtitle
+                                class="subtitle-1 white--text"
+                              >
+                                {{ item.plataform }}
+                              </v-list-item-subtitle>
+                            </v-list-item-content>
+                          </v-list-item>
+                        </v-col>
+                        <v-col cols="6" sm="6" class="text-center">
+                          <v-btn
+                            fab
+                            color="red"
+                            dark
+                            x-large
+                            :href="item.link"
+                            target="_blank"
+                          >
+                            <v-icon>mdi-youtube</v-icon>
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-menu>
+              </v-card>
+            </v-hover>
+          </v-col>
+        </template>
+      </v-row>
+    </v-container>
+
+    <v-snackbar
+      v-model="snackbar"
+      timeout="3000"
+      bottom
+      color="success"
+      rounded="pill"
+    >
+      <span :style="styleP"
+        ><v-icon>mdi-send-check</v-icon> Mensaje Enviado</span
+      >
 
       <template v-slot:action="{ attrs }">
         <v-btn color="indigo" text v-bind="attrs" @click="snackbar = false">
@@ -200,11 +347,14 @@ import firebase from "firebase";
 export default {
   data() {
     return {
+      a: false,
       dialog: false,
       valid: false,
       snackbar: false,
       loading: false,
+      menu: false,
       description: "",
+      videos: [],
       rules: {
         email: (value) => {
           if (value) {
@@ -279,11 +429,21 @@ export default {
       styleP: {
         "letter-spacing": "0.1em",
       },
+      mask: {
+        width: "100%",
+        "background-color": "#3F51B590",
+        "font-size": "2rem",
+        "font-weight": "bold",
+        "align-items": "center",
+        "justify-content": "center",
+        position: "absolute",
+        bottom: 0,
+      },
     };
   },
 
   methods: {
-    getData() {
+    getDescription() {
       var docRef = firebase
         .firestore()
         .collection("users")
@@ -299,6 +459,21 @@ export default {
         })
         .catch(function (error) {
           console.log("Error al obtener el documento:", error);
+        });
+    },
+
+    getVideos() {
+      firebase
+        .firestore()
+        .collection("users/oku1MhPtd9WvzeznFqnANT16Rdm2/videos")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            this.videos.push(doc.data());
+          });
+        })
+        .catch((error) => {
+          console.log("Error al obtener datos:", error);
         });
     },
 
@@ -365,7 +540,8 @@ export default {
     },
   },
   created() {
-    this.getData();
+    this.getDescription();
+    this.getVideos();
   },
 };
 </script>
